@@ -160,6 +160,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
     public static TextView tvNombre;
     public static TextView tvApellido;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ///SE NECESITAN CARGAR DATOS PERSONALES DESDE HOME
@@ -177,6 +178,8 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         mDriverProvider = new DriverProvider();
         cm = (ConnectivityManager)this.getSystemService(Context.CONNECTIVITY_SERVICE);
         rvServicios = findViewById(R.id.rvServicios);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rvServicios.setLayoutManager(linearLayoutManager);
 
         drawerMain();
 
@@ -184,7 +187,12 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         mapCreate();
         buttonConnect();
         load_first_day();
+
+
+        iniciarListener();
     }
+
+
 
     ////////////CARGA DE DATOS
     private void load_first_day() {
@@ -373,16 +381,13 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
             pararListener();
             startLocation();
         }
+
         iniciarListener();
         super.onResume();
     }
 
     @Override
     protected void onDestroy() {
-        /*
-        if(mIsConnect)
-            startServiceSegundoPlano(); //Segundo plano
-        */
         stopLocation();
         removeLocation();
         pararListener();
@@ -438,6 +443,10 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
         });
+
+
+
+
     }
 
 
@@ -583,10 +592,7 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
                 tvApellido.setText(mDriver.getApellido());
             }
             catch (Exception u)
-            {
-
-            }
-
+            { }
         }
 
         navigationView.bringToFront();

@@ -147,8 +147,8 @@ public class ServiciosListAdapter extends RecyclerView.Adapter<ServiciosListAdap
                 @Override
                 public void onClick(View v) {
                     destino = new LatLng(item.getLatitud(), item.getLongitud());
-                    //inService = true;
-                    //dibujandoRuta = true;
+                    inService = true;
+                    Home.dibujandoRuta = true;
                 }
             });
 

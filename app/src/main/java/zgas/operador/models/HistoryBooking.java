@@ -31,6 +31,9 @@ public class HistoryBooking {
     double calificationDriver;
     long timestamp;
 
+    public HistoryBooking() {
+    }
+
     public HistoryBooking(ClientBooking clientBooking)
     {
         SParticular = clientBooking.getSParticular();
