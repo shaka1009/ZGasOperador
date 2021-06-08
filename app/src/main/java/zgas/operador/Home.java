@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -14,6 +15,7 @@ import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -85,6 +87,7 @@ import java.util.StringTokenizer;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import zgas.operador.IA.DetectorActivity;
 import zgas.operador.includes.Popup;
 import zgas.operador.includes.Toolbar;
 import zgas.operador.models.ClientBooking;
@@ -704,6 +707,35 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
         }).start();
     }
 
+
+
+
+
+
+    private void conectando()
+    {
+        mButtonConnect.setText("Desconectarse");
+
+        startLocation();
+        mIsConnect=true;
+    }
+
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && isCorrect) {
+            conectando();
+            isCorrect=false;
+        }
+        else
+        {
+            isCorrect=false;
+        }
+    }
+
+public static boolean isCorrect=false;
+
     private void buttonConnect() {
         mButtonConnect = findViewById(R.id.mButtonConnect);
         mButtonConnect.setOnClickListener(view -> {
@@ -714,10 +746,10 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
                 mIsConnect=false;
             }
             else {
-                mButtonConnect.setText("Desconectarse");
 
-                startLocation();
-                mIsConnect=true;
+
+                Intent intent2 = new Intent(this, DetectorActivity.class);
+                startActivityForResult(intent2, 1);
             }
         });
 
