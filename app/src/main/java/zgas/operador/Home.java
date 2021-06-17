@@ -770,7 +770,7 @@ public static boolean isCorrect=false;
 
 
 
-    boolean emulador = false;
+    boolean emulador = true;
     private void buttonConnect() {
         mButtonConnect = findViewById(R.id.mButtonConnect);
         mButtonConnect.setOnClickListener(view -> {
