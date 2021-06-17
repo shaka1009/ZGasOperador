@@ -34,31 +34,36 @@
             android:id="@+id/tvDireccion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Dirección" />
+            android:text="Dirección"
+            android:textColor="@color/Gris4"/>
 
         <TextView
             android:id="@+id/tvNumExt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="NumExterior" />
+            android:text="NumExterior"
+            android:textColor="@color/Gris4"/>
 
         <TextView
             android:id="@+id/tvNumInt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Num Interior" />
+            android:text="Num Interior"
+            android:textColor="@color/Gris4"/>
 
         <TextView
             android:id="@+id/tvSParticular"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Seña particular" />
+            android:text="Seña particular"
+            android:textColor="@color/Gris4"/>
 
         <TextView
             android:id="@+id/tvCantidad"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cantidad" />
+            android:text="Cantidad"
+            android:textColor="@color/Gris4"/>
 
         <Button
             android:id="@+id/btnElegirRuta"

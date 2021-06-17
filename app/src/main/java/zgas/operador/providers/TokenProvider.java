@@ -14,7 +14,7 @@ public class TokenProvider {
     DatabaseReference mDatabase;
 
     public TokenProvider() {
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Tokens");
+        mDatabase = FirebaseDatabase.getInstance().getReference().child("Tokens").child("Operadores");
     }
 
     public void create(final String idUser) {

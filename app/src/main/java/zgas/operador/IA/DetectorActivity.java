@@ -74,9 +74,13 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.StringTokenizer;
 
 import zgas.operador.Home;
 import zgas.operador.IA.customview.OverlayView;
@@ -88,6 +92,7 @@ import zgas.operador.IA.tflite.SimilarityClassifier;
 import zgas.operador.IA.tflite.TFLiteObjectDetectionAPIModel;
 import zgas.operador.IA.tracking.MultiBoxTracker;
 import zgas.operador.R;
+import zgas.operador.models.Driver;
 import zgas.operador.models.IAData;
 import zgas.operador.providers.RegistroProvider;
 
@@ -192,16 +197,37 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
     faceDetector = detector;
 
-
     //checkWritePermission();
-
-
-
-
-
     //cargarDatosFB(Home.mDriver.get);
-    cargarDatosFB("73539");
 
+    whatNomina();
+  }
+
+  private void whatNomina() {
+    load_datos();
+  }
+
+
+  private void load_datos()
+  {
+    try {
+      FileInputStream read = openFileInput("Acc_AppOP");
+      int size = read.available();
+      byte[] buffer = new byte[size];
+      read.read(buffer);
+      read.close();
+      String text = new String(buffer);
+      StringTokenizer token = new StringTokenizer(text, "\n");
+
+      numNomina = token.nextToken();
+
+
+      Log.d("DEP", "NumNomina: " + numNomina);
+      cargarDatosFB(numNomina);
+    }
+    catch(Exception e){
+
+    }
   }
 
 
@@ -522,7 +548,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
             );
             //Toast.makeText(DetectorActivity.this, "Carga de datos correcta.", Toast.LENGTH_SHORT).show();
 
-            descargarObject("73539");
+            descargarObject(numNomina);
 
           }
           catch (Exception e)
@@ -590,7 +616,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
 
 
-      descargarBitmap("73539");
+      descargarBitmap(numNomina);
 
 
     } catch (Exception e ) {

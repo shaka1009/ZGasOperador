@@ -508,7 +508,39 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
                             if(mClientBooking.getStatus().equals("accept"))
                             {
                                 inService = true;
-                                mServicios.add(mClientBooking);
+
+
+
+
+                                //AQUI VA EL NO DUPLICAR
+                                Log.d("DEP", "Tamaño: " + mServicios.size());
+
+                                if(mServicios.size()!=0)
+                                {
+                                    for(int x=0; x<mServicios.size(); x++)
+                                    {
+                                        for(int y=0; y<mServicios.size();y++)
+                                        {
+                                            if(mServicios.get(x).equals(mServicios.get(y)) )
+                                            {
+                                                Log.d("DEP", "Hay repetidos");
+                                            }
+                                            else
+                                            {
+                                                mServicios.add(mClientBooking);
+                                            }
+
+                                        }
+                                    }
+                                }
+                                else
+                                    mServicios.add(mClientBooking);
+
+
+
+
+
+
                                 destino = new LatLng(mClientBooking.getLatitud(), mClientBooking.getLongitud());
                             }
 
@@ -736,6 +768,9 @@ public class Home extends AppCompatActivity implements OnMapReadyCallback {
 
 public static boolean isCorrect=false;
 
+
+
+    boolean emulador = false;
     private void buttonConnect() {
         mButtonConnect = findViewById(R.id.mButtonConnect);
         mButtonConnect.setOnClickListener(view -> {
@@ -747,9 +782,14 @@ public static boolean isCorrect=false;
             }
             else {
 
+                if(emulador)
+                    conectando();
+                else
+                {
+                    Intent intent2 = new Intent(this, DetectorActivity.class);
+                    startActivityForResult(intent2, 1);
+                }
 
-                Intent intent2 = new Intent(this, DetectorActivity.class);
-                startActivityForResult(intent2, 1);
             }
         });
 
@@ -890,26 +930,33 @@ public static boolean isCorrect=false;
     LocationListener locationListenerGPS = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+            try {
+                mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-            if (mStartLatLng != null) {
-                mEndLatLng = mStartLatLng;
+                if (mStartLatLng != null) {
+                    mEndLatLng = mStartLatLng;
+                }
+
+                mStartLatLng = new LatLng(mCurrentLatLng.latitude, mCurrentLatLng.longitude);
+
+                if (mEndLatLng != null) {
+                    CarMoveAnim.carAnim(mMarker, mEndLatLng, mStartLatLng);
+                }
+
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
+                        new CameraPosition.Builder()
+                                .target(new LatLng(location.getLatitude(), location.getLongitude()))
+                                .zoom(15f)
+                                .build()
+                ));
+                updateLocation();
+                dibujandoRuta();
+            }
+            catch (Exception e)
+            {
+                Log.d("DEP", "ERROR");
             }
 
-            mStartLatLng = new LatLng(mCurrentLatLng.latitude, mCurrentLatLng.longitude);
-
-            if (mEndLatLng != null) {
-                CarMoveAnim.carAnim(mMarker, mEndLatLng, mStartLatLng);
-            }
-
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(
-                    new CameraPosition.Builder()
-                            .target(new LatLng(location.getLatitude(), location.getLongitude()))
-                            .zoom(15f)
-                            .build()
-            ));
-
-            dibujandoRuta();
         }
 
         @Override
@@ -925,6 +972,8 @@ public static boolean isCorrect=false;
         public void onLocationResult(LocationResult locationResult) {
             for(Location location: locationResult.getLocations()) {
                 if (getApplicationContext() != null) {
+
+
                     if(!mIsStartLocation)
                     {
                         mMap.clear();
@@ -948,14 +997,24 @@ public static boolean isCorrect=false;
                             return;
                         }
 
-                        mLocationManager.requestLocationUpdates(
-                                LocationManager.GPS_PROVIDER,
-                                2000,
-                                10,
-                                locationListenerGPS
-                        );
+
+
+
+
                         stopLocation();
 
+                        try {
+                            mLocationManager.requestLocationUpdates(
+                                    LocationManager.GPS_PROVIDER,
+                                    2000,
+                                    10,
+                                    locationListenerGPS
+                            );
+                        }
+                        catch (Exception e)
+                        {
+                            Log.d("DEP", "ERROR GPS mLocationManager");
+                        }
                     }
                     Log.d("DEP", "Actualizando posición 1 sola vez.");
                 }
@@ -968,6 +1027,8 @@ public static boolean isCorrect=false;
 
 
     private void updateLocation() {
+
+        Log.d("DEP", "Existe Session: " + mAuthProvider.existSession() + "mCurrent: " + mCurrentLatLng);
         if (mAuthProvider.existSession() && mCurrentLatLng != null) {
             mGeofireProvider.saveLocation(mAuthProvider.getId(), mCurrentLatLng);
         }

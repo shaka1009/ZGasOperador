@@ -4,6 +4,7 @@ package zgas.operador;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +24,12 @@ import com.google.firebase.database.ValueEventListener;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 import net.yslibrary.android.keyboardvisibilityevent.util.UIUtil;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import zgas.operador.includes.Popup;
 import zgas.operador.providers.RegistroProvider;
@@ -168,6 +175,8 @@ public class Login extends AppCompatActivity {
                         telTEMP = snapshot.child("telefono").getValue().toString();
                         if(telefono.equals(telTEMP))
                             b = true;
+
+                        guardar_datosOp();
                     }
                     catch (Exception ignored) {}
 
@@ -202,6 +211,32 @@ public class Login extends AppCompatActivity {
 
         Log.d("DEP", "VAR: "+b);
         return b;
+    }
+
+
+
+    private void guardar_datosOp()
+    {
+        try{
+            //DELETE FILE
+            try{
+                try{
+                    deleteFile("Acc_AppOP");
+                }catch(Exception ignored){}
+
+                File f = new File("Acc_AppOP");
+                f.delete();
+            }catch(Exception ignored){}
+            //
+
+            FileOutputStream conf = openFileOutput("Acc_AppOP", Context.MODE_PRIVATE);
+            String cadena =
+                    etNumNomina.getText().toString() + "\n";
+
+            conf.write(cadena.getBytes());
+            conf.close();
+        }
+        catch(Exception ignored){}
     }
 
     private void loadingVisible(boolean b)
